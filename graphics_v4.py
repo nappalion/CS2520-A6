@@ -139,24 +139,23 @@ def draw_middle_net(left, top, w, h, ml_bias):
     ml_y = top + (h * ml_bias)
     ml_left_point = [left + 20, ml_y] 
 
-    # Left diagonal nets end here
-    left_diag_x = left + (w * 0.25)
-
     # Right diagonal nets start here
-    right_diag_x = (left + w) - (w * 0.25)
+    right_diag_x = 0
 
     start_x = left + 5
     end_x = ml_left_point[0] + 1
 
-    while start_x <= left_diag_x:
+    while start_x < end_x:
         pygame.draw.line(screen, WHITE, [start_x, top], [end_x, ml_y], 1)
         start_x += 5
         end_x += 3
-    
+        right_diag_x = (left + w) - (start_x - left + 5)
+
     while start_x <= right_diag_x:
         pygame.draw.line(screen, WHITE, [start_x, top], [end_x, ml_y], 1)
         start_x += 4
         end_x += 4
+
 
     while start_x <= (left + w - 5):
         pygame.draw.line(screen, WHITE, [start_x, top], [end_x, ml_y], 1)
@@ -296,6 +295,7 @@ while not done:
 
     draw_scoreboard()
 
+    #320, 140, 160, 80, 0.75
     draw_goal(left=320, top=140, w=160, h=80, ml_bias=0.75)
 
     #6 yard line goal box

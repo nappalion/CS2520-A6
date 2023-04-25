@@ -46,13 +46,6 @@ SEE_THROUGH = pygame.Surface((800, 180))
 SEE_THROUGH.set_alpha(150)
 SEE_THROUGH.fill((124, 118, 135))
 
-def draw_cloud(x, y):
-    pygame.draw.ellipse(SEE_THROUGH, cloud_color, [x, y + 8, 10, 10])
-    pygame.draw.ellipse(SEE_THROUGH, cloud_color, [x + 6, y + 4, 8, 8])
-    pygame.draw.ellipse(SEE_THROUGH, cloud_color, [x + 10, y, 16, 16])
-    pygame.draw.ellipse(SEE_THROUGH, cloud_color, [x + 20, y + 8, 10, 10])
-    pygame.draw.rect(SEE_THROUGH, cloud_color, [x + 6, y + 8, 18, 10])
-
 
 # Config
 lights_on = True
@@ -64,6 +57,13 @@ done = False
 
 stars = []
 clouds = []
+
+def draw_cloud(x, y):
+    pygame.draw.ellipse(SEE_THROUGH, cloud_color, [x, y + 8, 10, 10])
+    pygame.draw.ellipse(SEE_THROUGH, cloud_color, [x + 6, y + 4, 8, 8])
+    pygame.draw.ellipse(SEE_THROUGH, cloud_color, [x + 10, y, 16, 16])
+    pygame.draw.ellipse(SEE_THROUGH, cloud_color, [x + 20, y + 8, 10, 10])
+    pygame.draw.rect(SEE_THROUGH, cloud_color, [x + 6, y + 8, 18, 10])
 
 def fill_stars():
     for n in range(200):
@@ -77,6 +77,26 @@ def fill_clouds():
         x = random.randrange(-100, 1600)
         y = random.randrange(0, 150)
         clouds.append([x, y])
+        
+def draw_out_of_bounds():
+        #out of bounds lines
+        pygame.draw.line(screen, WHITE, [0, 580], [800, 580], 5)
+        #left
+        pygame.draw.line(screen, WHITE, [0, 360], [140, 220], 5)
+        pygame.draw.line(screen, WHITE, [140, 220], [660, 220], 3)
+        #right
+        pygame.draw.line(screen, WHITE, [660, 220], [800, 360], 5)
+
+
+def draw_safety_circle():
+    #safety circle
+    pygame.draw.ellipse(screen, WHITE, [240, 500, 320, 160], 5)
+
+def draw_yard_line():
+    #18 yard line goal box
+    pygame.draw.line(screen, WHITE, [260, 220], [180, 300], 5)
+    pygame.draw.line(screen, WHITE, [180, 300], [620, 300], 3)
+    pygame.draw.line(screen, WHITE, [620, 300], [540, 220], 5)
     
 
 while not done:
@@ -163,24 +183,10 @@ while not done:
     
     fill_stars()
     fill_clouds()  
-    
-    
-    #out of bounds lines
-    pygame.draw.line(screen, WHITE, [0, 580], [800, 580], 5)
-    #left
-    pygame.draw.line(screen, WHITE, [0, 360], [140, 220], 5)
-    pygame.draw.line(screen, WHITE, [140, 220], [660, 220], 3)
-    #right
-    pygame.draw.line(screen, WHITE, [660, 220], [800, 360], 5)
-
-    #safety circle
-    pygame.draw.ellipse(screen, WHITE, [240, 500, 320, 160], 5)
-
-    #18 yard line goal box
-    pygame.draw.line(screen, WHITE, [260, 220], [180, 300], 5)
-    pygame.draw.line(screen, WHITE, [180, 300], [620, 300], 3)
-    pygame.draw.line(screen, WHITE, [620, 300], [540, 220], 5)
-
+    draw_out_of_bounds()
+    draw_safety_circle()
+    draw_yard_line()
+        
     #arc at the top of the goal box
     pygame.draw.arc(screen, WHITE, [330, 280, 140, 40], math.pi, 2 * math.pi, 5)
     

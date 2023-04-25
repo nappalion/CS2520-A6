@@ -55,8 +55,10 @@ day = True
 # Game loop
 done = False
 
+
 stars = []
 clouds = []
+
 
 def draw_cloud(x, y):
     pygame.draw.ellipse(SEE_THROUGH, cloud_color, [x, y + 8, 10, 10])
@@ -65,6 +67,7 @@ def draw_cloud(x, y):
     pygame.draw.ellipse(SEE_THROUGH, cloud_color, [x + 20, y + 8, 10, 10])
     pygame.draw.rect(SEE_THROUGH, cloud_color, [x + 6, y + 8, 18, 10])
 
+
 def fill_stars():
     for n in range(200):
         x = random.randrange(0, 800)
@@ -72,11 +75,13 @@ def fill_stars():
         r = random.randrange(1, 2)
         stars.append([x, y, r, r])
 
+
 def fill_clouds():
     for i in range(20):
         x = random.randrange(-100, 1600)
         y = random.randrange(0, 150)
         clouds.append([x, y])
+        
         
 def draw_out_of_bounds():
         #out of bounds lines
@@ -92,15 +97,18 @@ def draw_safety_circle():
     #safety circle
     pygame.draw.ellipse(screen, WHITE, [240, 500, 320, 160], 5)
 
+
 def draw_yard_line():
     #18 yard line goal box
     pygame.draw.line(screen, WHITE, [260, 220], [180, 300], 5)
     pygame.draw.line(screen, WHITE, [180, 300], [620, 300], 3)
     pygame.draw.line(screen, WHITE, [620, 300], [540, 220], 5)
+ 
     
 def draw_arc():
     #arc at the top of the goal box
     pygame.draw.arc(screen, WHITE, [330, 280, 140, 40], math.pi, 2 * math.pi, 5)
+    
     
 def draw_scoreboard():
     #score board pole
@@ -123,6 +131,7 @@ def draw_goal_frame(left, top, w, h):
     pygame.draw.line(screen, WHITE, [left + w, top + h], ml_right_point, 3)
     pygame.draw.line(screen, WHITE, [left, top], ml_left_point, 3)
     pygame.draw.line(screen, WHITE, [left + w, top], ml_right_point, 3)
+
 
 def draw_middle_net(left, top, w, h):
     # Draw Vertical Lines
@@ -168,6 +177,7 @@ def draw_middle_net(left, top, w, h):
 
         pygame.draw.line(screen, WHITE, [start_x, y], [end_x, y], 1)
         y += 4
+        
 
 def draw_left_right_net(left, top, w, h):
 
@@ -184,6 +194,7 @@ def draw_left_right_net(left, top, w, h):
     #net part 3; vertical lines right
     for i in range(1,10):
         pygame.draw.line(screen, WHITE, [left + w, top], [(start_x - 2 * i), (end_x - 2 * i)], 1)
+
 
 def draw_goal(left, top, w, h):
     draw_goal_frame(left, top, w, h)
@@ -250,6 +261,7 @@ while not done:
     pygame.draw.rect(screen, stripe_color, [0, 492, 800, 82])
 
 
+
     '''fence'''
     y = 170
     for x in range(5, 800, 30):
@@ -269,6 +281,7 @@ while not done:
         pygame.draw.ellipse(screen, WHITE, [520, 50, 40, 40]) 
         pygame.draw.ellipse(screen, sky_color, [530, 45, 40, 40])
 
+    
     
     
     for c in clouds:

@@ -98,6 +98,18 @@ def draw_yard_line():
     pygame.draw.line(screen, WHITE, [180, 300], [620, 300], 3)
     pygame.draw.line(screen, WHITE, [620, 300], [540, 220], 5)
     
+def draw_arc():
+    #arc at the top of the goal box
+    pygame.draw.arc(screen, WHITE, [330, 280, 140, 40], math.pi, 2 * math.pi, 5)
+    
+def draw_scoreboard():
+    #score board pole
+    pygame.draw.rect(screen, GRAY, [390, 120, 20, 70])
+
+    #score board
+    pygame.draw.rect(screen, BLACK, [300, 40, 200, 90])
+    pygame.draw.rect(screen, WHITE, [302, 42, 198, 88], 2)
+    
 
 while not done:
     # Event processing (React to key presses, mouse clicks, etc.)
@@ -186,17 +198,10 @@ while not done:
     draw_out_of_bounds()
     draw_safety_circle()
     draw_yard_line()
-        
-    #arc at the top of the goal box
-    pygame.draw.arc(screen, WHITE, [330, 280, 140, 40], math.pi, 2 * math.pi, 5)
+    draw_arc()
+    draw_scoreboard()
     
-    #score board pole
-    pygame.draw.rect(screen, GRAY, [390, 120, 20, 70])
-
-    #score board
-    pygame.draw.rect(screen, BLACK, [300, 40, 200, 90])
-    pygame.draw.rect(screen, WHITE, [302, 42, 198, 88], 2)
-
+    
 
     #goal
     pygame.draw.rect(screen, WHITE, [320, 140, 160, 80], 5)

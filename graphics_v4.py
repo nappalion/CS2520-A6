@@ -111,17 +111,9 @@ def draw_scoreboard():
     pygame.draw.rect(screen, WHITE, [302, 42, 198, 88], 2)
 
 
-def draw_goal_frame(left, top, w, h, ml_bias):
-    #goal
-    # pygame.draw.rect(screen, WHITE, [320, 140, 160, 80], 5)
-    # pygame.draw.line(screen, WHITE, [340, 200], [460, 200], 3)
-    # pygame.draw.line(screen, WHITE, [320, 220], [340, 200], 3)
-    # pygame.draw.line(screen, WHITE, [480, 220], [460, 200], 3)
-    # pygame.draw.line(screen, WHITE, [320, 140], [340, 200], 3)
-    # pygame.draw.line(screen, WHITE, [480, 140], [460, 200], 3)
-
+def draw_goal_frame(left, top, w, h):
     # middle line coordinates
-    ml_y = top + (h * ml_bias)
+    ml_y = top + (h - 20)
     ml_left_point = [left + 20, ml_y] 
     ml_right_point = [left + w - 20, ml_y]
             
@@ -132,31 +124,33 @@ def draw_goal_frame(left, top, w, h, ml_bias):
     pygame.draw.line(screen, WHITE, [left, top], ml_left_point, 3)
     pygame.draw.line(screen, WHITE, [left + w, top], ml_right_point, 3)
 
-def draw_middle_net(left, top, w, h, ml_bias):
+def draw_middle_net(left, top, w, h):
     # Draw Vertical Lines
-
     # goal frame middle line coordinates
-    ml_y = top + (h * ml_bias)
+    ml_y = top + (h - 20)
     ml_left_point = [left + 20, ml_y] 
 
     # Right diagonal nets start here
     right_diag_x = 0
 
+    # Start and end points for each net line
     start_x = left + 5
     end_x = ml_left_point[0] + 1
 
+    # Draw the vertical lines that slant left
     while start_x < end_x:
         pygame.draw.line(screen, WHITE, [start_x, top], [end_x, ml_y], 1)
         start_x += 5
         end_x += 3
         right_diag_x = (left + w) - (start_x - left + 5)
 
+    # Draw straight vertical lines
     while start_x <= right_diag_x:
         pygame.draw.line(screen, WHITE, [start_x, top], [end_x, ml_y], 1)
         start_x += 4
         end_x += 4
 
-
+    # Draw the vertical lines that slant right
     while start_x <= (left + w - 5):
         pygame.draw.line(screen, WHITE, [start_x, top], [end_x, ml_y], 1)
         start_x += 5
@@ -191,9 +185,9 @@ def draw_left_right_net(left, top, w, h):
     for i in range(1,10):
         pygame.draw.line(screen, WHITE, [left + w, top], [(start_x - 2 * i), (end_x - 2 * i)], 1)
 
-def draw_goal(left, top, w, h, ml_bias):
-    draw_goal_frame(left, top, w, h, ml_bias)
-    draw_middle_net(left, top, w, h, ml_bias)
+def draw_goal(left, top, w, h):
+    draw_goal_frame(left, top, w, h)
+    draw_middle_net(left, top, w, h)
     draw_left_right_net(left, top, w, h)
 
 
@@ -296,7 +290,7 @@ while not done:
     draw_scoreboard()
 
     #320, 140, 160, 80, 0.75
-    draw_goal(left=320, top=140, w=160, h=80, ml_bias=0.75)
+    draw_goal(left=320, top=140, w=160, h=80)
 
     #6 yard line goal box
     pygame.draw.line(screen, WHITE, [310, 220], [270, 270], 3)

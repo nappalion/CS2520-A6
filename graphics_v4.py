@@ -111,7 +111,7 @@ def draw_scoreboard():
     pygame.draw.rect(screen, WHITE, [302, 42, 198, 88], 2)
 
 
-def draw_goal(left, top, w, h, ml_bias):
+def draw_goal_frame(left, top, w, h, ml_bias):
     #goal
     # pygame.draw.rect(screen, WHITE, [320, 140, 160, 80], 5)
     # pygame.draw.line(screen, WHITE, [340, 200], [460, 200], 3)
@@ -133,7 +133,9 @@ def draw_goal(left, top, w, h, ml_bias):
     pygame.draw.line(screen, WHITE, [left + w, top], ml_right_point, 3)
 
 def draw_middle_net(left, top, w, h, ml_bias):
-    # middle line coordinates
+    # Draw Vertical Lines
+
+    # goal frame middle line coordinates
     ml_y = top + (h * ml_bias)
     ml_left_point = [left + 20, ml_y] 
 
@@ -161,7 +163,39 @@ def draw_middle_net(left, top, w, h, ml_bias):
         start_x += 5
         end_x += 3
 
+    start_x = left + 4
+    end_x = left + w - 4
+    y = top
 
+    #Draw Horizontal Lines
+    while y < ml_y:
+        if y >= (top + (h / 2)):
+            start_x = left + 15
+            end_x = left + w - 10
+
+        pygame.draw.line(screen, WHITE, [start_x, y], [end_x, y], 1)
+        y += 4
+
+def draw_left_right_net(left, top, w, h):
+
+    start_x = left
+    end_x = top + h
+
+    #net part 2; vertical lines left
+    for i in range(1,10):
+        pygame.draw.line(screen, WHITE, [left, top], [(start_x + 2 * i), (end_x - 2 * i)], 1)
+
+    start_x = left + w - 2 
+    end_x = top + h - 2
+
+    #net part 3; vertical lines right
+    for i in range(1,10):
+        pygame.draw.line(screen, WHITE, [left + w, top], [(start_x - 2 * i), (end_x - 2 * i)], 1)
+
+def draw_goal(left, top, w, h, ml_bias):
+    draw_goal_frame(left, top, w, h, ml_bias)
+    draw_middle_net(left, top, w, h, ml_bias)
+    draw_left_right_net(left, top, w, h)
 
 
     
@@ -262,46 +296,7 @@ while not done:
 
     draw_scoreboard()
 
-    draw_goal(320, 140, 160, 80, 0.75)
-
-    draw_middle_net(320, 140, 160, 80, 0.75)
-
-
-    #net part 2; vertical lines left
-    pygame.draw.line(screen, WHITE, [320, 140], [324, 216], 1)
-    pygame.draw.line(screen, WHITE, [320, 140], [326, 214], 1)
-    pygame.draw.line(screen, WHITE, [320, 140], [328, 212], 1)
-    pygame.draw.line(screen, WHITE, [320, 140], [330, 210], 1)
-    pygame.draw.line(screen, WHITE, [320, 140], [332, 208], 1)
-    pygame.draw.line(screen, WHITE, [320, 140], [334, 206], 1)
-    pygame.draw.line(screen, WHITE, [320, 140], [336, 204], 1)
-    pygame.draw.line(screen, WHITE, [320, 140], [338, 202], 1)
-
-    #net part 3; vertical lines right
-    pygame.draw.line(screen, WHITE, [480, 140], [476, 216], 1)
-    pygame.draw.line(screen, WHITE, [480, 140], [474, 214], 1)
-    pygame.draw.line(screen, WHITE, [480, 140], [472, 212], 1)
-    pygame.draw.line(screen, WHITE, [480, 140], [470, 210], 1)
-    pygame.draw.line(screen, WHITE, [480, 140], [468, 208], 1)
-    pygame.draw.line(screen, WHITE, [480, 140], [466, 206], 1)
-    pygame.draw.line(screen, WHITE, [480, 140], [464, 204], 1)
-    pygame.draw.line(screen, WHITE, [480, 140], [462, 202], 1)
-
-    #net part 4; horizontal lines; center
-    pygame.draw.line(screen, WHITE, [324, 144], [476, 144], 1)
-    pygame.draw.line(screen, WHITE, [324, 148], [476, 148], 1)
-    pygame.draw.line(screen, WHITE, [324, 152], [476, 152], 1)
-    pygame.draw.line(screen, WHITE, [324, 156], [476, 156], 1)
-    pygame.draw.line(screen, WHITE, [324, 160], [476, 160], 1)
-    pygame.draw.line(screen, WHITE, [324, 164], [476, 164], 1)
-    pygame.draw.line(screen, WHITE, [324, 168], [476, 168], 1)
-    pygame.draw.line(screen, WHITE, [324, 172], [476, 172], 1)
-    pygame.draw.line(screen, WHITE, [324, 176], [476, 176], 1)
-    pygame.draw.line(screen, WHITE, [335, 180], [470, 180], 1)
-    pygame.draw.line(screen, WHITE, [335, 184], [465, 184], 1)
-    pygame.draw.line(screen, WHITE, [335, 188], [465, 188], 1)
-    pygame.draw.line(screen, WHITE, [335, 192], [465, 192], 1)
-    pygame.draw.line(screen, WHITE, [335, 196], [465, 196], 1)
+    draw_goal(left=320, top=140, w=160, h=80, ml_bias=0.75)
 
     #6 yard line goal box
     pygame.draw.line(screen, WHITE, [310, 220], [270, 270], 3)

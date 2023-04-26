@@ -238,9 +238,11 @@ def draw_light_pole(x, y):
             curr_x += 20
         pygame.draw.line(screen, GRAY, [start_x, y-20*i], [end_x, y-20*i], 2)
     
-
-
-
+def draw_corner_flag(x, y, direction = 1):
+    #corner flag left
+    pygame.draw.line(screen, BRIGHT_YELLOW, [x, y], [x+5*direction, y-30], 3)
+    pygame.draw.polygon(screen, RED, [[x+8*direction, y-30], [x+15*direction, y-24], [x+5*direction, y-15]])
+    
 
 while not done:
     # Event processing (React to key presses, mouse clicks, etc.)
@@ -299,7 +301,6 @@ while not done:
     pygame.draw.rect(screen, stripe_color, [0, 492, 800, 82])
 
 
-
     '''fence'''
     y = 170
     for x in range(5, 800, 30):
@@ -313,15 +314,13 @@ while not done:
     for y in range(170, 185, 4):
         pygame.draw.line(screen, NIGHT_GRAY, [x, y], [x + 800, y], 1)
 
+
     if day:
         pygame.draw.ellipse(screen, BRIGHT_YELLOW, [520, 50, 40, 40])
     else:
         pygame.draw.ellipse(screen, WHITE, [520, 50, 40, 40]) 
         pygame.draw.ellipse(screen, sky_color, [530, 45, 40, 40])
 
-    
-    
-    
     for c in clouds:
         draw_cloud(c[0], c[1])
     screen.blit(SEE_THROUGH, (0, 0)) 
@@ -351,14 +350,10 @@ while not done:
     pygame.draw.polygon(screen, WHITE, [[120, 180], [0, 100], [0, 290]])
     #people
     
-
-    #corner flag right
-    pygame.draw.line(screen, BRIGHT_YELLOW, [140, 220], [135, 190], 3)
-    pygame.draw.polygon(screen, RED, [[132, 190], [125, 196], [135, 205]])
-
-    #corner flag left
-    pygame.draw.line(screen, BRIGHT_YELLOW, [660, 220], [665, 190], 3)
-    pygame.draw.polygon(screen, RED, [[668, 190], [675, 196], [665, 205]]) 
+    #left corner flag
+    draw_corner_flag(140, 220, -1)
+    #right corner flag
+    draw_corner_flag(660, 220, 1)
 
     # DARKNESS
     if not day and not lights_on:

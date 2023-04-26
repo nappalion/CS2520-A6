@@ -5,22 +5,22 @@ Goal: to rewrite repository into functional form code chunks for easier manipula
 Commit Contributions per Group Member
 
 Xitali Gonzales: 
-  clouds
-  stars
-  out of bounds
-  safety circle
-  yard line
-  arc
-  scoreboard
+  clouds,
+  stars,
+  out of bounds,
+  safety circle,
+  yard line,
+  arc,
+  scoreboard,
 
 Napoleon Torrico:
-  initial commit
-  goal
-  light pole
-  six yard line
+  initial commit,
+  goal,
+  light pole,
+  six yard line,
   
 Lance Sahagun:
-  readme
-  corner flags
-  fence
+  readme,
+  corner flags,
+  fence,
   stands

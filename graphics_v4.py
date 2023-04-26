@@ -238,6 +238,11 @@ def draw_light_pole(x, y):
             curr_x += 20
         pygame.draw.line(screen, GRAY, [start_x, y-20*i], [end_x, y-20*i], 2)
     
+def draw_stands(x, y, direction = 1):
+    #draws stand, direction controls what direction the stand (white and red polygons) faces
+    pygame.draw.polygon(screen, RED, [[x, y], [x+120*direction, y+120], [x+120*direction, y+70], [x, y-40]])
+    pygame.draw.polygon(screen, WHITE, [[x, y-40], [x+120*direction, y-120], [x+120*direction, y+70]])
+
 def draw_corner_flag(x, y, direction = 1):
     #draws corner flag, direction controls what direction the flag (both line and triangle) faces
     pygame.draw.line(screen, BRIGHT_YELLOW, [x, y], [x+5*direction, y-30], 3)
@@ -303,9 +308,6 @@ while not done:
         for s in stars:
             pygame.draw.ellipse(screen, WHITE, s)
 
-
-
-
     pygame.draw.rect(screen, field_color, [0, 180, 800 , 420])
     pygame.draw.rect(screen, stripe_color, [0, 180, 800, 42])
     pygame.draw.rect(screen, stripe_color, [0, 264, 800, 52])
@@ -342,15 +344,11 @@ while not done:
     draw_light_pole(630, 60)
 
     #stands right
-    pygame.draw.polygon(screen, RED, [[680, 220], [800, 340], [800, 290], [680, 180]])
-    pygame.draw.polygon(screen, WHITE, [[680, 180], [800, 100], [800, 290]])
+    draw_stands(680, 220, direction = 1)
 
-  
     #stands left
-    pygame.draw.polygon(screen, RED, [[120, 220], [0, 340], [0, 290], [120, 180]])
-    pygame.draw.polygon(screen, WHITE, [[120, 180], [0, 100], [0, 290]])
-    #people
-    
+    draw_stands(120, 220, direction = -1)
+
     #left corner flag
     draw_corner_flag(140, 220, -1)
     #right corner flag

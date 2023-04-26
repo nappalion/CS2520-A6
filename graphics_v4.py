@@ -213,6 +213,12 @@ def draw_goal(left, top, w, h):
     draw_middle_net(left, top, w, h)
     draw_left_right_net(left, top, w, h)
 
+#270, 270, 260
+def draw_six_yard_line(x, y, w, h):
+    pygame.draw.line(screen, WHITE, [x + 40, y - h], [x, y], 3)
+    pygame.draw.line(screen, WHITE, [x, y], [x + w, y], 2)
+    pygame.draw.line(screen, WHITE, [x + w, y], [x + w - 40, y - h], 3)
+
 def draw_light_pole(x, y):
     pygame.draw.rect(screen, GRAY, [x, y, 20, 140])
     pygame.draw.ellipse(screen, GRAY, [x, y + 135, 20, 10])
@@ -326,10 +332,8 @@ while not done:
 
     draw_light_pole(150, 60)
 
-    #6 yard line goal box
-    pygame.draw.line(screen, WHITE, [310, 220], [270, 270], 3)
-    pygame.draw.line(screen, WHITE, [270, 270], [530, 270], 2)
-    pygame.draw.line(screen, WHITE, [530, 270], [490, 220], 3)
+    draw_six_yard_line(270, 270, 260, 50)
+
 
     draw_light_pole(630, 60)
 

@@ -68,19 +68,23 @@ def draw_cloud(x, y):
     pygame.draw.rect(SEE_THROUGH, cloud_color, [x + 6, y + 8, 18, 10])
 
 
-def fill_stars():
-    for n in range(200):
-        x = random.randrange(0, 800)
-        y = random.randrange(0, 200)
+def fill_stars(star_range):
+    for n in range(star_range):
+        x = random.randrange(0, star_range*4)
+        y = random.randrange(0, star_range)
         r = random.randrange(1, 2)
         stars.append([x, y, r, r])
 
 
-def fill_clouds():
-    for i in range(20):
-        x = random.randrange(-100, 1600)
+def fill_clouds(cloud_range):
+    for i in range(cloud_range):
+        x = random.randrange(-100, cloud_range*80)
         y = random.randrange(0, 150)
         clouds.append([x, y])
+        
+def clouds_stars(s_range, c_range):
+    fill_stars(s_range)
+    fill_clouds(c_range)
         
         
 def draw_out_of_bounds(surf, clr, width):
@@ -312,9 +316,7 @@ while not done:
         draw_cloud(c[0], c[1])
     screen.blit(SEE_THROUGH, (0, 0)) 
     
-    fill_stars()
-    
-    fill_clouds()  
+    clouds_stars(s_range=200, c_range=20) 
 
     draw_field_details(surf=screen, clr=WHITE, width=5)
 

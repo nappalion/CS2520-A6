@@ -87,32 +87,34 @@ def clouds_stars(s_range, c_range):
     fill_clouds(c_range)
         
         
-def draw_out_of_bounds(surf, clr, width):
+def draw_out_of_bounds(surf, clr, width, x, y, z):
     #out of bounds lines
-    pygame.draw.line(surf, clr, [0, 580], [800, 580], width)
+    w = z-80
+    pygame.draw.line(surf, clr, [0, x], [y, x], width)
     #left
-    pygame.draw.line(surf, clr, [0, 360], [140, 220], width)
-    pygame.draw.line(surf, clr, [140, 220], [660, 220], width - 2)
+    pygame.draw.line(surf, clr, [0, x-z], [w, z], width)
+    pygame.draw.line(surf, clr, [w, z], [y-w, z], width - 2)
     #right
-    pygame.draw.line(surf, clr, [660, 220], [800, 360], width)
+    pygame.draw.line(surf, clr, [y-w, z], [y, x-z], width)
 
 
-def draw_safety_circle(surf, clr, width):
+def draw_safety_circle(surf, clr, width, x, z):
     #safety circle
-    pygame.draw.ellipse(surf, clr, [240, 500, 320, 160], width)
+    pygame.draw.ellipse(surf, clr, [z+20, x-80, z+100, z-60], width)
 
 
 
-def draw_yard_line(surf, clr, width):
+def draw_yard_line(surf, clr, width, x, z):
     #18 yard line goal box
-    pygame.draw.line(surf, clr, [260, 220], [180, 300], width)
-    pygame.draw.line(surf, clr, [180, 300], [620, 300], width - 2)
-    pygame.draw.line(surf, clr, [620, 300], [540, 220], width)
+    w = 40
+    pygame.draw.line(surf, clr, [z+w, z], [z-w, z+80], width)
+    pygame.draw.line(surf, clr, [z-w, z+80], [x+w, z+80], width - 2)
+    pygame.draw.line(surf, clr, [x+w, z+80], [x-w, z], width)
  
     
-def draw_arc(surf, clr, width):
+def draw_arc(surf, clr, width, z):
     #arc at the top of the goal box
-    pygame.draw.arc(surf, clr, [330, 280, 140, 40], math.pi, 2 * math.pi, width)
+    pygame.draw.arc(surf, clr, [z+110, z+60, z-80, 40], math.pi, 2 * math.pi, width)
     
     
 def draw_scoreboard():
@@ -124,11 +126,11 @@ def draw_scoreboard():
     pygame.draw.rect(screen, WHITE, [302, 42, 198, 88], 2)
 
 
-def draw_field_details(surf, clr, width):
-    draw_out_of_bounds(surf, clr, width)
-    draw_safety_circle(surf, clr, width)
-    draw_yard_line(surf, clr, width)
-    draw_arc(surf, clr, width)
+def draw_field_details(surf, clr, width, x, y, z):
+    draw_out_of_bounds(surf, clr, width, x, y, z)
+    draw_safety_circle(surf, clr, width, x, z)
+    draw_yard_line(surf, clr, width, x, z)
+    draw_arc(surf, clr, width, z)
 
 
 def draw_goal_frame(left, top, w, h):
@@ -324,7 +326,7 @@ while not done:
     
     clouds_stars(s_range=200, c_range=20) 
 
-    draw_field_details(surf=screen, clr=WHITE, width=5)
+    draw_field_details(surf=screen, clr=WHITE, width=5, x=580, y=800, z=220)
 
     draw_scoreboard()
 

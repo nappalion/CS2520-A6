@@ -239,10 +239,22 @@ def draw_light_pole(x, y):
         pygame.draw.line(screen, GRAY, [start_x, y-20*i], [end_x, y-20*i], 2)
     
 def draw_corner_flag(x, y, direction = 1):
-    #corner flag left
+    #draws corner flag, direction controls what direction the flag (both line and triangle) faces
     pygame.draw.line(screen, BRIGHT_YELLOW, [x, y], [x+5*direction, y-30], 3)
     pygame.draw.polygon(screen, RED, [[x+8*direction, y-30], [x+15*direction, y-24], [x+5*direction, y-15]])
-    
+
+def draw_fence(x_start, x_end, y_start, y_end):
+    #draws components of fence (grid, back, poles)
+    y = y_start
+    for x in range(x_start, x_end, 30):
+        pygame.draw.polygon(screen, NIGHT_GRAY, [[x + 2, y], [x + 2, y + 15], [x, y + 15], [x, y]])
+    for x in range(x_start, x_end, 3):
+        pygame.draw.line(screen, NIGHT_GRAY, [x, y], [x, y + 15], 1)
+
+    x = 0
+    for y in range(y_start, y_end, 4):
+        pygame.draw.line(screen, NIGHT_GRAY, [x, y], [x + 800, y], 1)    
+
 
 while not done:
     # Event processing (React to key presses, mouse clicks, etc.)
@@ -300,19 +312,8 @@ while not done:
     pygame.draw.rect(screen, stripe_color, [0, 368, 800, 62])
     pygame.draw.rect(screen, stripe_color, [0, 492, 800, 82])
 
-
-    '''fence'''
-    y = 170
-    for x in range(5, 800, 30):
-        pygame.draw.polygon(screen, NIGHT_GRAY, [[x + 2, y], [x + 2, y + 15], [x, y + 15], [x, y]])
-
-    y = 170
-    for x in range(5, 800, 3):
-        pygame.draw.line(screen, NIGHT_GRAY, [x, y], [x, y + 15], 1)
-
-    x = 0
-    for y in range(170, 185, 4):
-        pygame.draw.line(screen, NIGHT_GRAY, [x, y], [x + 800, y], 1)
+    #fence
+    draw_fence(5, 800, 170, 185)
 
 
     if day:

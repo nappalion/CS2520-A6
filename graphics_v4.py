@@ -117,13 +117,15 @@ def draw_arc(surf, clr, width, z):
     pygame.draw.arc(surf, clr, [z+110, z+60, z-80, 40], math.pi, 2 * math.pi, width)
     
     
-def draw_scoreboard():
+def draw_scoreboard(w, x, y, z):
     #score board pole
-    pygame.draw.rect(screen, GRAY, [390, 120, 20, 70])
+    pygame.draw.rect(screen, GRAY, [w, x, y, z])
 
     #score board
-    pygame.draw.rect(screen, BLACK, [300, 40, 200, 90])
-    pygame.draw.rect(screen, WHITE, [302, 42, 198, 88], 2)
+    v = w-90
+    h = w-x-z
+    pygame.draw.rect(screen, BLACK, [v, y+y, h, z+y])
+    pygame.draw.rect(screen, WHITE, [v+2, y+22, h-2, z+18], 2)
 
 
 def draw_field_details(surf, clr, width, x, y, z):
@@ -328,7 +330,7 @@ while not done:
 
     draw_field_details(surf=screen, clr=WHITE, width=5, x=580, y=800, z=220)
 
-    draw_scoreboard()
+    draw_scoreboard(w=390, x=120, y=20, z=70)
 
     draw_goal(left=320, top=140, w=160, h=80)
 

@@ -190,8 +190,24 @@ def draw_goal(left, top, w, h):
     draw_middle_net(left, top, w, h)
     draw_left_right_net(left, top, w, h)
 
+def draw_light_pole(x, y):
+    pygame.draw.rect(screen, GRAY, [x, y, 20, 140])
+    pygame.draw.ellipse(screen, GRAY, [x, y + 135, 20, 10])
 
+    start_x = x - 40
+    end_x = x + 60
     
+    pygame.draw.line(screen, GRAY, [start_x, y], [end_x, y], 2)
+    for i in range(1,3):
+        curr_x = start_x
+        for j in range(5):
+            pygame.draw.ellipse(screen, light_color, [curr_x, y-20*i, 20, 20])
+            curr_x += 20
+        pygame.draw.line(screen, GRAY, [start_x, y-20*i], [end_x, y-20*i], 2)
+    
+
+
+
 
 while not done:
     # Event processing (React to key presses, mouse clicks, etc.)
@@ -289,53 +305,16 @@ while not done:
 
     draw_scoreboard()
 
-    #320, 140, 160, 80, 0.75
     draw_goal(left=320, top=140, w=160, h=80)
+
+    draw_light_pole(150, 60)
 
     #6 yard line goal box
     pygame.draw.line(screen, WHITE, [310, 220], [270, 270], 3)
     pygame.draw.line(screen, WHITE, [270, 270], [530, 270], 2)
     pygame.draw.line(screen, WHITE, [530, 270], [490, 220], 3)
 
-    #light pole 1
-    pygame.draw.rect(screen, GRAY, [150, 60, 20, 140])
-    pygame.draw.ellipse(screen, GRAY, [150, 195, 20, 10])
-
-    #lights
-    pygame.draw.line(screen, GRAY, [110, 60], [210, 60], 2)
-    pygame.draw.ellipse(screen, light_color, [110, 40, 20, 20])
-    pygame.draw.ellipse(screen, light_color, [130, 40, 20, 20])
-    pygame.draw.ellipse(screen, light_color, [150, 40, 20, 20])
-    pygame.draw.ellipse(screen, light_color, [170, 40, 20, 20])
-    pygame.draw.ellipse(screen, light_color, [190, 40, 20, 20])
-    pygame.draw.line(screen, GRAY, [110, 40], [210, 40], 2)
-    pygame.draw.ellipse(screen, light_color, [110, 20, 20, 20])
-    pygame.draw.ellipse(screen, light_color, [130, 20, 20, 20])
-    pygame.draw.ellipse(screen, light_color, [150, 20, 20, 20])
-    pygame.draw.ellipse(screen, light_color, [170, 20, 20, 20])
-    pygame.draw.ellipse(screen, light_color, [190, 20, 20, 20])
-    pygame.draw.line(screen, GRAY, [110, 20], [210, 20], 2)
-
-    #light pole 2
-    pygame.draw.rect(screen, GRAY, [630, 60, 20, 140])
-    pygame.draw.ellipse(screen, GRAY, [630, 195, 20, 10])
-
-    #lights
-        
-    pygame.draw.line(screen, GRAY, [590, 60], [690, 60], 2)
-    pygame.draw.ellipse(screen, light_color, [590, 40, 20, 20])
-    pygame.draw.ellipse(screen, light_color, [610, 40, 20, 20])
-    pygame.draw.ellipse(screen, light_color, [630, 40, 20, 20])
-    pygame.draw.ellipse(screen, light_color, [650, 40, 20, 20])
-    pygame.draw.ellipse(screen, light_color, [670, 40, 20, 20])
-    pygame.draw.line(screen, GRAY, [590, 40], [690, 40], 2)
-    pygame.draw.ellipse(screen, light_color, [590, 20, 20, 20])
-    pygame.draw.ellipse(screen, light_color, [610, 20, 20, 20])
-    pygame.draw.ellipse(screen, light_color, [630, 20, 20, 20])
-    pygame.draw.ellipse(screen, light_color, [650, 20, 20, 20])
-    pygame.draw.ellipse(screen, light_color, [670, 20, 20, 20])
-    pygame.draw.line(screen, GRAY, [590, 20], [690, 20], 2)
-
+    draw_light_pole(630, 60)
 
     #stands right
     pygame.draw.polygon(screen, RED, [[680, 220], [800, 340], [800, 290], [680, 180]])

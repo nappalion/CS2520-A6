@@ -336,11 +336,12 @@ while not done:
 
     draw_goal(left=320, top=140, w=160, h=80)
 
+    #left light pole
     draw_light_pole(150, 60)
 
     draw_six_yard_line(270, 270, 260, 50)
 
-
+    #right light pole
     draw_light_pole(630, 60)
 
     #stands right

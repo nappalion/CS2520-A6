@@ -9,11 +9,11 @@ Xitali Gonzales:
       Create "bombs" that will be dropped by targets onto the cannon
 
 Napoleon Torrico:
-      Develop several target types with different movement patterns
+      Develop several target types with different movement patterns,
       Implement multiple cannons that can shoot at each other
   
 Lance Sahagun:
-      Implement various types of projectiles
+      Implement various types of projectiles,
       Transform the cannon into a moving tank
 
 ==============================================================================

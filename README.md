@@ -6,15 +6,15 @@ Goal: to rewrite cannon.py into modular and OOP code chunks for easy access. Add
 Commit Contributions per Group Member
 
 Xitali Gonzales: 
-  4. Create "bombs" that will be dropped by targets onto the cannon
+      Create "bombs" that will be dropped by targets onto the cannon
 
 Napoleon Torrico:
-  2. Develop several target types with different movement patterns
-  5. Implement multiple cannons that can shoot at each other
+      Develop several target types with different movement patterns
+      Implement multiple cannons that can shoot at each other
   
 Lance Sahagun:
-  1. Implement various types of projectiles
-  3. Transfrom the cannon into a moving tank
+      Implement various types of projectiles
+      Transform the cannon into a moving tank
 
 ==============================================================================
 

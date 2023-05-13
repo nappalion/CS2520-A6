@@ -15,7 +15,7 @@ Lance Sahagun:
   1. Implement various types of projectiles
   3. Transfrom the cannon into a moving tank
 
-==========================================================================================================================================================================================================================
+==============================================================================
 
 Assignment 6.
 Goal: to rewrite graphics_v4.py into functional form code chunks for easier manipulation of pygame module. 

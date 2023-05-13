@@ -1,5 +1,6 @@
 # CS2520-A6
 Group Project
+
 Goal: to rewrite cannon.py into modular and OOP code chunks for easy access. Additionally, add onto the cannon.py with additional tasks
 
 Commit Contributions per Group Member

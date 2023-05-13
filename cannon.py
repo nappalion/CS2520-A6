@@ -121,7 +121,7 @@ class Cannon(GameObject):
 
     def move(self, inc_vertical, inc_horizontal):
         '''
-        #changed to have move method allow gun to move vertically and horizontally
+        #changed to have move method allow cannon to move vertically and horizontally
         '''
         if (30 < self.coord[1] + inc_vertical < SCREEN_SIZE[1] - 30) and (30 < self.coord[0] + inc_horizontal < SCREEN_SIZE[0] - 30):
             self.coord[1] += inc_vertical
@@ -226,6 +226,11 @@ class Manager:
         self.score_t = ScoreTable()
         self.n_targets = n_targets
         self.new_mission()
+         #created new boolean variables to define key movement, as well as add directional movement
+        self.move_up = False
+        self.move_down = False
+        self.move_left = False
+        self.move_right = False
 
     def new_mission(self):
         '''
@@ -261,15 +266,25 @@ class Manager:
         '''
         Handles events from keyboard, mouse, etc.
         '''
-       #created new boolean variables to define key movement, as well as add directional movement
-        move_up = False
-        move_down = False
-        move_left = False
-        move_right = False
         
         done = False
         #changed keyboard input directions, now uses WASD for movement instead of Arrow Keys
         #rewrote elift statements into separate if statements, wrote code to track holding down a key
+        
+        #the actual movement, both vertical and horizontal        
+        move_vertical = 0
+        move_horizontal = 0
+    
+        if self.move_up:
+            move_vertical -= 10
+        if self.move_down:
+            move_vertical += 10
+        if self.move_left:
+            move_horizontal -= 10
+        if self.move_right:
+            move_horizontal += 10
+
+        self.gun.move(move_vertical, move_horizontal)
         
         for event in events:
             if event.type == pg.QUIT:
@@ -277,43 +292,32 @@ class Manager:
                 
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_w:
-                    move_up = True
-                    #self.gun.move(10, 0)
+                    self.move_up = True
+                    
                 if event.key == pg.K_s:
-                    #self.gun.move(10, 0)
-                    move_down = True
+                    self.move_down = True
+                    
                 if event.key == pg.K_a:
-                    #self.gun.move(0, -10)
-                    move_left = True
+                    self.move_left = True
+                    
                 if event.key == pg.K_d:
-                    #self.gun.move(0, 10)
-                    move_right = True
+                    self.move_right = True
+                    
             elif event.type == pg.KEYUP:
+                
                 if event.key == pg.K_w:
-                    move_up = False
+                    self.move_up = False
+                    
                 if event.key == pg.K_s:
-                    move_down = False
+                    self.move_down = False
+                    
                 if event.key == pg.K_a:
-                    move_left = False
+                    self.move_left = False
+                    
                 if event.key == pg.K_d:
-                    move_right = False
-            
-            #the actual movement, both vertical and horizontal        
-            move_vertical = 0
-            move_horizontal = 0
-    
-            if move_up:
-                move_vertical -= 10
-            if move_down:
-                move_vertical += 10
-            if move_left:
-                move_horizontal -= 10
-            if move_right:
-                move_horizontal += 10
-
-            self.gun.move(move_vertical, move_horizontal)
-                        
-                #cannon activation           
+                    self.move_right = False
+                  
+            #gun activation           
             if event.type == pg.MOUSEBUTTONDOWN:
                 if event.button == 1:
                         self.gun.activate()

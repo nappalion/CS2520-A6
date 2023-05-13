@@ -119,12 +119,13 @@ class Cannon(GameObject):
         '''
         self.angle = np.arctan2(target_pos[1] - self.coord[1], target_pos[0] - self.coord[0])
 
-    def move(self, inc):
+    def move(self, inc_vertical, inc_horizontal):
         '''
-        Changes vertical position of the gun.
+        #changed to have move method allow gun to move vertically and horizontally
         '''
-        if (self.coord[1] > 30 or inc > 0) and (self.coord[1] < SCREEN_SIZE[1] - 30 or inc < 0):
-            self.coord[1] += inc
+        if (30 < self.coord[1] + inc_vertical < SCREEN_SIZE[1] - 30) and (30 < self.coord[0] + inc_horizontal < SCREEN_SIZE[0] - 30):
+            self.coord[1] += inc_vertical
+            self.coord[0] += inc_horizontal
 
     def draw(self, screen):
         '''
@@ -260,23 +261,68 @@ class Manager:
         '''
         Handles events from keyboard, mouse, etc.
         '''
+       #created new boolean variables to define key movement, as well as add directional movement
+        move_up = False
+        move_down = False
+        move_left = False
+        move_right = False
+        
         done = False
+        #changed keyboard input directions, now uses WASD for movement instead of Arrow Keys
+        #rewrote elift statements into separate if statements, wrote code to track holding down a key
+        
         for event in events:
             if event.type == pg.QUIT:
                 done = True
-            elif event.type == pg.KEYDOWN:
-                if event.key == pg.K_UP:
-                    self.gun.move(-5)
-                elif event.key == pg.K_DOWN:
-                    self.gun.move(5)
-            elif event.type == pg.MOUSEBUTTONDOWN:
+                
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_w:
+                    move_up = True
+                    #self.gun.move(10, 0)
+                if event.key == pg.K_s:
+                    #self.gun.move(10, 0)
+                    move_down = True
+                if event.key == pg.K_a:
+                    #self.gun.move(0, -10)
+                    move_left = True
+                if event.key == pg.K_d:
+                    #self.gun.move(0, 10)
+                    move_right = True
+            elif event.type == pg.KEYUP:
+                if event.key == pg.K_w:
+                    move_up = False
+                if event.key == pg.K_s:
+                    move_down = False
+                if event.key == pg.K_a:
+                    move_left = False
+                if event.key == pg.K_d:
+                    move_right = False
+            
+            #the actual movement, both vertical and horizontal        
+            move_vertical = 0
+            move_horizontal = 0
+    
+            if move_up:
+                move_vertical -= 10
+            if move_down:
+                move_vertical += 10
+            if move_left:
+                move_horizontal -= 10
+            if move_right:
+                move_horizontal += 10
+
+            self.gun.move(move_vertical, move_horizontal)
+                        
+                #cannon activation           
+            if event.type == pg.MOUSEBUTTONDOWN:
                 if event.button == 1:
-                    self.gun.activate()
-            elif event.type == pg.MOUSEBUTTONUP:
+                        self.gun.activate()
+            if event.type == pg.MOUSEBUTTONUP:
                 if event.button == 1:
-                    self.balls.append(self.gun.strike())
-                    self.score_t.b_used += 1
+                        self.balls.append(self.gun.strike())
+                        self.score_t.b_used += 1
         return done
+    
 
     def draw(self, screen):
         '''

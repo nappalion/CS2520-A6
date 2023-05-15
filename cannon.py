@@ -8,8 +8,10 @@ pg.font.init()
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
+BLUE = (0, 0, 255)
 
 SCREEN_SIZE = (800, 600)
+SCREEN_GAP = 100
 
 
 def rand_color():
@@ -95,6 +97,14 @@ class Cannon(GameObject):
         '''
         self.active = True
 
+    def check_collision(self, ball):
+        '''
+        Checks whether the ball bumps into the cannon.
+        '''
+        dist = sum([(self.coord[i] - ball.coord[i])**2 for i in range(2)])**0.5
+        min_dist = ball.rad
+        return dist <= min_dist
+
     def gain(self, inc=2):
         '''
         Increases current gun charge power.
@@ -121,7 +131,7 @@ class Cannon(GameObject):
 
     def move(self, inc_vertical, inc_horizontal):
         '''
-        Changes vertical position of the gun.
+        Changes vertical and horizontal position of the gun.
         '''
         if (30 < self.coord[1] + inc_vertical < SCREEN_SIZE[1] - 30) and (30 < self.coord[0] + inc_horizontal < SCREEN_SIZE[0] - 30):
             self.coord[1] += inc_vertical
@@ -141,6 +151,37 @@ class Cannon(GameObject):
         gun_shape.append((gun_pos - vec_1).tolist())
         pg.draw.polygon(screen, self.color, gun_shape)
 
+class RobotCannon(Cannon):
+    '''
+    RobotCannon Class. Creates an enemy cannon that shoots and moves randomly.
+    '''
+    def __init__(self, coord=[30, SCREEN_SIZE[1]//2], angle=0, max_pow=50, min_pow=10, color=RED, vx=0, vy=0):
+        super().__init__(coord, angle, max_pow, min_pow, color)
+        self.vx = vx
+        self.vy = vy
+
+    def move(self):
+        self.coord[0] += self.vx
+        self.coord[1] += self.vy
+
+        # Make the cannon bounce in the x-direction
+        if self.coord[0] < SCREEN_GAP or self.coord[0] > SCREEN_SIZE[0] - SCREEN_GAP:
+            self.vx = -self.vx
+
+        # Make the cannon bounce in the y-direction
+        if self.coord[1] < SCREEN_GAP or self.coord[1] > SCREEN_SIZE[1] - SCREEN_GAP:
+            self.vy = -self.vy
+
+    def strike(self):
+        '''
+        Creates ball, according to random gun direction and charge power.
+        '''
+        vel = randint(self.min_pow, self.max_pow)
+        angle = randint(0,360)
+        ball = Shell(list(self.coord), [int(vel * np.cos(angle)), int(vel * np.sin(angle))], color=RED)
+        self.pow = self.min_pow
+        self.active = False
+        return ball
 
 class Target(GameObject):
     '''
@@ -213,16 +254,17 @@ class ScoreTable:
     '''
     Score table class.
     '''
-    def __init__(self, t_destr=0, b_used=0):
+    def __init__(self, t_destr=0, b_used=0, t_hit=0):
         self.t_destr = t_destr
         self.b_used = b_used
+        self.t_hit = t_hit
         self.font = pg.font.SysFont("dejavusansmono", 25)
 
     def score(self):
         '''
         Score calculation method.
         '''
-        return self.t_destr - self.b_used
+        return self.t_destr - self.b_used - self.t_hit
 
     def draw(self, screen):
         score_surf = []
@@ -239,7 +281,11 @@ class Manager:
     '''
     def __init__(self, n_targets=1):
         self.balls = []
+        self.enemyBalls = []
         self.gun = Cannon()
+        
+        self.gun2 = RobotCannon(coord=[randint(0,SCREEN_SIZE[0]), randint(0,SCREEN_SIZE[1])], color=BLUE, vy=10)
+
         self.targets = []
         self.score_t = ScoreTable()
         self.n_targets = n_targets
@@ -249,6 +295,8 @@ class Manager:
         self.move_down = False
         self.move_left = False
         self.move_right = False
+
+        self.time = 0
 
     def new_mission(self):
         '''
@@ -292,6 +340,13 @@ class Manager:
         self.move()
         self.collide()
         self.draw(screen)
+
+        self.gun2.move()
+
+        self.time += 1
+
+        if self.time % 25 == 0:
+            self.enemyBalls.append(self.gun2.strike())
 
         if len(self.targets) == 0 and len(self.balls) == 0:
             self.new_mission()
@@ -369,9 +424,12 @@ class Manager:
         '''
         for ball in self.balls:
             ball.draw(screen)
+        for enemyBall in self.enemyBalls:
+            enemyBall.draw(screen)
         for target in self.targets:
             target.draw(screen)
         self.gun.draw(screen)
+        self.gun2.draw(screen)
         self.score_t.draw(screen)
 
     def move(self):
@@ -379,12 +437,23 @@ class Manager:
         Runs balls' and gun's movement method, removes dead balls.
         '''
         dead_balls = []
+
         for i, ball in enumerate(self.balls):
             ball.move(grav=2)
             if not ball.is_alive:
                 dead_balls.append(i)
         for i in reversed(dead_balls):
             self.balls.pop(i)
+
+        dead_enemy_balls = []
+        for i, enemyBall in enumerate(self.enemyBalls):
+            enemyBall.move(grav=2)
+            if not enemyBall.is_alive:
+                dead_enemy_balls.append(i)
+        for i in reversed(dead_enemy_balls):
+            if (len(self.enemyBalls) > 0):
+                self.enemyBalls.pop(i)
+
         for i, target in enumerate(self.targets):
             target.move()
         self.gun.gain()
@@ -404,6 +473,21 @@ class Manager:
         for j in reversed(targets_c):
             self.score_t.t_destr += 1
             self.targets.pop(j)
+
+
+        for i, ball in enumerate(self.enemyBalls):
+            if self.gun.check_collision(ball):
+                self.gun.coord[0] = randint(SCREEN_GAP, SCREEN_SIZE[0] - SCREEN_GAP)
+                self.gun.coord[1] = randint(SCREEN_GAP, SCREEN_SIZE[1] - SCREEN_GAP)
+                self.score_t.t_hit += 1
+
+        for i, ball in enumerate(self.balls):
+            if self.gun2.check_collision(ball):
+                self.gun2.coord[0] = randint(SCREEN_GAP, SCREEN_SIZE[0] - SCREEN_GAP)
+                self.gun2.coord[1] = randint(SCREEN_GAP, SCREEN_SIZE[1] - SCREEN_GAP)
+                self.score_t.t_hit -= 1
+
+        
 
 
 screen = pg.display.set_mode(SCREEN_SIZE)

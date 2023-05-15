@@ -102,7 +102,7 @@ class Cannon(GameObject):
         Checks whether the ball bumps into the cannon.
         '''
         dist = sum([(self.coord[i] - ball.coord[i])**2 for i in range(2)])**0.5
-        min_dist = ball.rad
+        min_dist = ball.rad + 10
         return dist <= min_dist
 
     def gain(self, inc=2):
@@ -155,10 +155,11 @@ class RobotCannon(Cannon):
     '''
     RobotCannon Class. Creates an enemy cannon that shoots and moves randomly.
     '''
-    def __init__(self, coord=[30, SCREEN_SIZE[1]//2], angle=0, max_pow=50, min_pow=10, color=RED, vx=0, vy=0):
+    def __init__(self, coord=[30, SCREEN_SIZE[1]//2], angle=0, max_pow=50, min_pow=10, color=RED, vx=0, vy=0, shootTime = 25):
         super().__init__(coord, angle, max_pow, min_pow, color)
         self.vx = vx
         self.vy = vy
+        self.shootTime = shootTime
 
     def move(self):
         self.coord[0] += self.vx
@@ -254,24 +255,27 @@ class ScoreTable:
     '''
     Score table class.
     '''
-    def __init__(self, t_destr=0, b_used=0, t_hit=0):
+    def __init__(self, t_destr=0, b_used=0, got_hit=0, hit_enemy=0):
         self.t_destr = t_destr
         self.b_used = b_used
-        self.t_hit = t_hit
+        self.got_hit = got_hit
+        self.hit_enemy = hit_enemy
         self.font = pg.font.SysFont("dejavusansmono", 25)
 
     def score(self):
         '''
         Score calculation method.
         '''
-        return self.t_destr - self.b_used - self.t_hit
+        return self.t_destr - self.b_used - self.got_hit + self.hit_enemy
 
     def draw(self, screen):
         score_surf = []
         score_surf.append(self.font.render("Destroyed: {}".format(self.t_destr), True, WHITE))
         score_surf.append(self.font.render("Balls used: {}".format(self.b_used), True, WHITE))
+        score_surf.append(self.font.render("Hit by Enemies: {}".format(self.got_hit), True, WHITE))
+        score_surf.append(self.font.render("Enemies Hit: {}".format(self.hit_enemy), True, WHITE))
         score_surf.append(self.font.render("Total: {}".format(self.score()), True, RED))
-        for i in range(3):
+        for i in range(5):
             screen.blit(score_surf[i], [10, 10 + 30*i])
 
 
@@ -279,16 +283,16 @@ class Manager:
     '''
     Class that manages events' handling, ball's motion and collision, target creation, etc.
     '''
-    def __init__(self, n_targets=1):
+    def __init__(self, n_targets=1, n_enemies=1):
         self.balls = []
         self.enemyBalls = []
         self.gun = Cannon()
-        
-        self.gun2 = RobotCannon(coord=[randint(0,SCREEN_SIZE[0]), randint(0,SCREEN_SIZE[1])], color=BLUE, vy=10)
+        self.enemyGuns = []
 
         self.targets = []
         self.score_t = ScoreTable()
         self.n_targets = n_targets
+        self.n_enemies = n_enemies
         self.new_mission()
          #created new boolean variables to define key movement, as well as add directional movement
         self.move_up = False
@@ -300,7 +304,7 @@ class Manager:
 
     def new_mission(self):
         '''
-        Adds new targets.
+        Adds new targets and enemy cannons.
         '''
         for i in range(self.n_targets):
             # Create vertical moving targets
@@ -325,6 +329,11 @@ class Manager:
                 vy=3))
             self.targets.append(Target(rad=randint(max(1, 30 - 2*max(0, self.score_t.score())),
                 30 - max(0, self.score_t.score()))))
+            
+        for i in range(self.n_enemies):
+            self.enemyGuns.append(RobotCannon(coord=[randint(0,SCREEN_SIZE[0]), randint(0,SCREEN_SIZE[1])], color=BLUE, vx=randint(-10, 10), vy=randint(-10, 10), shootTime=randint(50, 100)))
+            
+        
 
 
     def process(self, events, screen):
@@ -341,12 +350,13 @@ class Manager:
         self.collide()
         self.draw(screen)
 
-        self.gun2.move()
-
         self.time += 1
 
-        if self.time % 25 == 0:
-            self.enemyBalls.append(self.gun2.strike())
+        for i, enemy in enumerate(self.enemyGuns):
+            enemy.move()
+            if self.time % enemy.shootTime == 0:
+                self.enemyBalls.append(enemy.strike())
+
 
         if len(self.targets) == 0 and len(self.balls) == 0:
             self.new_mission()
@@ -429,7 +439,9 @@ class Manager:
         for target in self.targets:
             target.draw(screen)
         self.gun.draw(screen)
-        self.gun2.draw(screen)
+
+        for i, enemy in enumerate(self.enemyGuns):
+            enemy.draw(screen)
         self.score_t.draw(screen)
 
     def move(self):
@@ -474,18 +486,20 @@ class Manager:
             self.score_t.t_destr += 1
             self.targets.pop(j)
 
-
+        # Enemy ball hits player: remove 1 point, teleport player randomly
         for i, ball in enumerate(self.enemyBalls):
             if self.gun.check_collision(ball):
                 self.gun.coord[0] = randint(SCREEN_GAP, SCREEN_SIZE[0] - SCREEN_GAP)
                 self.gun.coord[1] = randint(SCREEN_GAP, SCREEN_SIZE[1] - SCREEN_GAP)
-                self.score_t.t_hit += 1
+                self.score_t.got_hit += 1
 
-        for i, ball in enumerate(self.balls):
-            if self.gun2.check_collision(ball):
-                self.gun2.coord[0] = randint(SCREEN_GAP, SCREEN_SIZE[0] - SCREEN_GAP)
-                self.gun2.coord[1] = randint(SCREEN_GAP, SCREEN_SIZE[1] - SCREEN_GAP)
-                self.score_t.t_hit -= 1
+        # Player's balls hits player: add 1 point, remove enemy
+        for i, enemy in enumerate(self.enemyGuns):
+            for j, ball in enumerate(self.balls):
+                if enemy.check_collision(ball):
+                    if enemy in self.enemyGuns:
+                        self.enemyGuns.remove(enemy)
+                    self.score_t.hit_enemy += 1
 
         
 
@@ -496,7 +510,7 @@ pg.display.set_caption("The gun of Khiryanov")
 done = False
 clock = pg.time.Clock()
 
-mgr = Manager(n_targets=3)
+mgr = Manager(n_targets=3, n_enemies=5)
 
 while not done:
     clock.tick(15)

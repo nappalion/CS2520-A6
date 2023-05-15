@@ -121,7 +121,7 @@ class Cannon(GameObject):
 
     def move(self, inc_vertical, inc_horizontal):
         '''
-        #changed to have move method allow cannon to move vertically and horizontally
+        Changes vertical position of the gun.
         '''
         if (30 < self.coord[1] + inc_vertical < SCREEN_SIZE[1] - 30) and (30 < self.coord[0] + inc_horizontal < SCREEN_SIZE[0] - 30):
             self.coord[1] += inc_vertical
@@ -362,7 +362,6 @@ class Manager:
                         self.balls.append(self.gun.strike())
                         self.score_t.b_used += 1
         return done
-    
 
     def draw(self, screen):
         '''

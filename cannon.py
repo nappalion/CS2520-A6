@@ -181,15 +181,33 @@ class Target(GameObject):
         pass
 
 class MovingTargets(Target):
-    def __init__(self, coord=None, color=None, rad=30):
+    def __init__(self, coord=None, color=None, rad=30, vx=2, vy=2):
         super().__init__(coord, color, rad)
-        self.vx = randint(-2, +2)
-        self.vy = randint(-2, +2)
+        self.vx = randint(-vx, +vx)
+        self.vy = randint(-vy, +vy)
     
     def move(self):
         self.coord[0] += self.vx
         self.coord[1] += self.vy
 
+        # Make the balls bounce in the x-direction
+        if self.coord[0] < 0 or self.coord[0] > SCREEN_SIZE[0]:
+            self.vx = -self.vx
+
+        # Make the balls bounce in the y-direction
+        if self.coord[1] < 0 or self.coord[1] > SCREEN_SIZE[1]:
+            self.vy = -self.vy
+
+
+class ZigZagTargets(MovingTargets):
+    def __init__(self, coord=None, color=None, rad=30, vx=2, vy=2):
+        super().__init__(coord, color, rad, vx, vy)
+        
+    def move(self):
+        self.coord[0] += self.vx * 2
+        self.coord[1] += self.vy * 2
+
+        self.vx = -self.vx
 
 class ScoreTable:
     '''
@@ -237,8 +255,26 @@ class Manager:
         Adds new targets.
         '''
         for i in range(self.n_targets):
+            # Create vertical moving targets
             self.targets.append(MovingTargets(rad=randint(max(1, 30 - 2*max(0, self.score_t.score())),
-                30 - max(0, self.score_t.score()))))
+                30 - max(0, self.score_t.score())),
+                vx=0,
+                vy=3))
+            # Create horizontal moving targets
+            self.targets.append(MovingTargets(rad=randint(max(1, 30 - 2*max(0, self.score_t.score())),
+                30 - max(0, self.score_t.score())),
+                vx=3,
+                vy=0))
+            # Create diagonal moving targets
+            self.targets.append(MovingTargets(rad=randint(max(1, 30 - 2*max(0, self.score_t.score())),
+                30 - max(0, self.score_t.score())),
+                vx=3,
+                vy=3))
+            # Create ZigZag moving targets
+            self.targets.append(ZigZagTargets(rad=randint(max(1, 30 - 2*max(0, self.score_t.score())),
+                30 - max(0, self.score_t.score())),
+                vx=3,
+                vy=3))
             self.targets.append(Target(rad=randint(max(1, 30 - 2*max(0, self.score_t.score())),
                 30 - max(0, self.score_t.score()))))
 

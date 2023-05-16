@@ -253,6 +253,10 @@ class MovingTargets(Target):
         # Make the balls bounce in the y-direction
         if self.coord[1] < 0 or self.coord[1] > SCREEN_SIZE[1]:
             self.vy = -self.vy
+            
+        #falling bombs
+        for circle in self.falling_bombs:
+            circle[1] += 4
 
 
 class ZigZagTargets(MovingTargets):
@@ -264,6 +268,10 @@ class ZigZagTargets(MovingTargets):
         self.coord[1] += self.vy * 2
 
         self.vx = -self.vx
+        
+        #falling bombs
+        for circle in self.falling_bombs:
+            circle[1] += 4
 
 class ScoreTable:
     '''

@@ -9,6 +9,7 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
+GRAY = (96, 96, 96)
 
 SCREEN_SIZE = (800, 600)
 SCREEN_GAP = 100
@@ -200,6 +201,9 @@ class Target(GameObject):
         if color == None:
             color = rand_color()
         self.color = color
+        
+        #New attribute, falling bombs
+        self.falling_bombs = []
 
     def check_collision(self, ball):
         '''
@@ -208,19 +212,29 @@ class Target(GameObject):
         dist = sum([(self.coord[i] - ball.coord[i])**2 for i in range(2)])**0.5
         min_dist = self.rad + ball.rad
         return dist <= min_dist
+    
+    #falling bombs function
+    def add_falling_bombs(self):
+        bomb = [self.coord[0], self.coord[1] + self.rad]
+        self.falling_bombs.append(bomb)
 
     def draw(self, screen):
         '''
         Draws the target on the screen
         '''
         pg.draw.circle(screen, self.color, self.coord, self.rad)
+        #drawing falling bombs
+        for circle in self.falling_bombs:
+            pg.draw.circle(screen, GRAY, circle, 5)
 
     def move(self):
         """
         This type of target can't move at all.
         :return: None
         """
-        pass
+        #dropping bombs
+        for circle in self.falling_bombs:
+            circle[1] += 4
 
 class MovingTargets(Target):
     def __init__(self, coord=None, color=None, rad=30, vx=2, vy=2):

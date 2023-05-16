@@ -330,25 +330,37 @@ class Manager:
         '''
         for i in range(self.n_targets):
             # Create vertical moving targets
-            self.targets.append(MovingTargets(rad=randint(max(1, 30 - 2*max(0, self.score_t.score())),
+            vertical=MovingTargets(rad=randint(max(1, 30 - 2*max(0, self.score_t.score())),
                 30 - max(0, self.score_t.score())),
                 vx=0,
-                vy=3))
+                vy=3)
+            vertical.add_falling_bombs()
+            self.targets.append(vertical)
+            
             # Create horizontal moving targets
-            self.targets.append(MovingTargets(rad=randint(max(1, 30 - 2*max(0, self.score_t.score())),
+            horizontal=MovingTargets(rad=randint(max(1, 30 - 2*max(0, self.score_t.score())),
                 30 - max(0, self.score_t.score())),
                 vx=3,
-                vy=0))
+                vy=0)
+            horizontal.add_falling_bombs()
+            self.targets.append(horizontal)
+            
             # Create diagonal moving targets
-            self.targets.append(MovingTargets(rad=randint(max(1, 30 - 2*max(0, self.score_t.score())),
+            diagonal=MovingTargets(rad=randint(max(1, 30 - 2*max(0, self.score_t.score())),
                 30 - max(0, self.score_t.score())),
                 vx=3,
-                vy=3))
+                vy=3)
+            diagonal.add_falling_bombs()
+            self.targets.append(diagonal)
+            
             # Create ZigZag moving targets
-            self.targets.append(ZigZagTargets(rad=randint(max(1, 30 - 2*max(0, self.score_t.score())),
+            zigzag=ZigZagTargets(rad=randint(max(1, 30 - 2*max(0, self.score_t.score())),
                 30 - max(0, self.score_t.score())),
                 vx=3,
-                vy=3))
+                vy=3)
+            zigzag.add_falling_bombs()
+            self.targets.append(zigzag)
+            
             #default targets with falling bombs
             target = Target(rad=randint(max(1, 30 - 2*max(0, self.score_t.score())),
                 30 - max(0, self.score_t.score())))

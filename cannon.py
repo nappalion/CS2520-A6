@@ -341,8 +341,11 @@ class Manager:
                 30 - max(0, self.score_t.score())),
                 vx=3,
                 vy=3))
-            self.targets.append(Target(rad=randint(max(1, 30 - 2*max(0, self.score_t.score())),
-                30 - max(0, self.score_t.score()))))
+            #default targets with falling bombs
+            target = Target(rad=randint(max(1, 30 - 2*max(0, self.score_t.score())),
+                30 - max(0, self.score_t.score())))
+            target.add_falling_bombs()
+            self.targets.append(target)
             
         for i in range(self.n_enemies):
             self.enemyGuns.append(RobotCannon(coord=[randint(0,SCREEN_SIZE[0]), randint(0,SCREEN_SIZE[1])], color=BLUE, vx=randint(-10, 10), vy=randint(-10, 10), shootTime=randint(50, 100)))

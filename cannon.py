@@ -220,9 +220,9 @@ class Target(GameObject):
             bomb = [self.coord[0], self.coord[1] + self.rad]
             self.falling_bombs.append(bomb)
             
-            #generates random speed for falling bombs
-            speed = gauss(2, 4)
-            self.speeds.append(speed)
+            #generating different speeds for the falling bombs
+            speed = (0.7, 4, 7, 2, 9)
+            self.speeds.append(speed[i])
 
     def draw(self, screen):
         '''
@@ -261,9 +261,10 @@ class MovingTargets(Target):
         if self.coord[1] < 0 or self.coord[1] > SCREEN_SIZE[1]:
             self.vy = -self.vy
             
-        #falling bombs
-        for circle in self.falling_bombs:
-            circle[1] += 4
+        #dropping bombs
+        for i, circle in enumerate(self.falling_bombs):
+            speed = self.speeds[i]
+            circle[1] += speed
 
 
 class ZigZagTargets(MovingTargets):
@@ -276,9 +277,10 @@ class ZigZagTargets(MovingTargets):
 
         self.vx = -self.vx
         
-        #falling bombs
-        for circle in self.falling_bombs:
-            circle[1] += 4
+        #dropping bombs
+        for i, circle in enumerate(self.falling_bombs):
+            speed = self.speeds[i]
+            circle[1] += speed
 
 class ScoreTable:
     '''
@@ -341,7 +343,7 @@ class Manager:
                 30 - max(0, self.score_t.score())),
                 vx=0,
                 vy=3)
-            vertical.add_falling_bombs(3)
+            vertical.add_falling_bombs(5)
             self.targets.append(vertical)
             
             # Create horizontal moving targets
@@ -349,7 +351,7 @@ class Manager:
                 30 - max(0, self.score_t.score())),
                 vx=3,
                 vy=0)
-            horizontal.add_falling_bombs(3)
+            horizontal.add_falling_bombs(5)
             self.targets.append(horizontal)
             
             # Create diagonal moving targets
@@ -357,7 +359,7 @@ class Manager:
                 30 - max(0, self.score_t.score())),
                 vx=3,
                 vy=3)
-            diagonal.add_falling_bombs(3)
+            diagonal.add_falling_bombs(5)
             self.targets.append(diagonal)
             
             # Create ZigZag moving targets
@@ -365,11 +367,11 @@ class Manager:
                 30 - max(0, self.score_t.score())),
                 vx=3,
                 vy=3)
-            zigzag.add_falling_bombs(3)
+            zigzag.add_falling_bombs(5)
             self.targets.append(zigzag)
             
             #default targets with falling bombs
-            target = Target(rad=randint(max(1, 30 - 2*max(0, self.score_t.score())),
+            target=Target(rad=randint(max(1, 30 - 2*max(0, self.score_t.score())),
                 30 - max(0, self.score_t.score())))
             target.add_falling_bombs(5)
             self.targets.append(target)

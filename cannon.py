@@ -75,6 +75,17 @@ class Shell(GameObject):
         '''
         pg.draw.circle(screen, self.color, self.coord, self.rad)
 
+class Bomb(Shell):
+    def __init__(self, coord, vel, rad=5, color=RED):
+        super().__init__(coord, vel, rad, color)
+
+    def move(self, time=10, grav=0):
+        self.vel[1] += grav
+        for i in range(2):
+            self.coord[i] += time * self.vel[i]
+        self.check_corners(refl_ort=0.7, refl_par=0.8)
+        if self.coord[1] > SCREEN_SIZE[1]:
+            self.is_alive = False
 
 class Cannon(GameObject):
     '''
@@ -123,6 +134,14 @@ class Cannon(GameObject):
         self.pow = self.min_pow
         self.active = False
         return ball
+    
+    def launch_bomb(self):
+        vel = self.pow
+        angle = self.angle
+        bomb = Bomb(list(self.coord), [int(vel * np.cos(angle)), int(vel * np.sin(angle))])
+        self.pow = self.min_pow
+        self.active = False
+        return bomb
         
     def set_angle(self, target_pos):
         '''
@@ -449,6 +468,9 @@ class Manager:
                     
                 if event.key == pg.K_d:
                     self.move_right = True
+                
+                if event.key == pg.K_SPACE:
+                    self.balls.append(self.gun.launch_bomb())
                     
             elif event.type == pg.KEYUP:
                 
